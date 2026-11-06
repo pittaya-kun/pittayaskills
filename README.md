@@ -6,8 +6,8 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 
 ```
 ┌─────────────────────┐     pacote.md     ┌──────────────────────┐
-│   PLANEJADOR        │ ─────────────────▶ │    OPERADOR         │
-│   (sdd-handoff)     │                    │  (design-operator)   │
+│   ARQUITETO         │ ─────────────────▶ │    OPERADOR         │
+│   (architect)       │                    │  (design-operator)   │
 │                     │ ◀───────────────── │                     │
 │ • Brief (o quê/porquê)                   │ • Executa tarefas   │
 │ • Plano (como)                           │ • Verifica checks   │
@@ -23,7 +23,7 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 
 ### Fluxo Principal
 
-1. **Planejador** (`sdd-handoff`) — Conversa com o usuário, gera:
+1. **Arquiteto** (`architect`) — Conversa com o usuário, gera:
    - `brief.md` — objetivo, entregáveis, critérios de aceite, perguntas abertas
    - `plano.md` — tarefas sequenciais com dependências, custo estimado, checks
    - `pacote.md` — tarefas da rodada atual (dependências satisfeitas)
@@ -34,7 +34,7 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
    - Aplica política de desvio (N1 = correção mínima, N2 = para e pergunta)
    - Devolve `retorno.md` curto
 
-3. **Próxima rodada** — Planejador lê retorno, atualiza plano, libera próximo pacote
+3. **Próxima rodada** — Arquiteto lê retorno, atualiza plano, libera próximo pacote
 
 ---
 
@@ -43,7 +43,7 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 ### Core (SDD)
 | Skill | Papel |
 |-------|-------|
-| `sdd-handoff` | Planejador — converte conversa em brief/plano/pacote |
+| `architect` | Arquiteto — converte conversa em brief/plano/pacote |
 | `design-operator` | Operador — executa pacote, verifica checks, devolve retorno |
 
 ### Program Skills (ferramentas que o operador chama)
@@ -54,7 +54,6 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 | `pdfcraft` | Manipulação/export PDF/X | `pdfcraft` |
 | `photocraft` | Tratamento de imagem, cor | `photocraft` |
 | `vectorcraft` | Vetores, SVG, ilustração | `vectorcraft` |
-| `vectorcraft-bin` | Binários/fonts do Vectorcraft | — |
 | `figcraft` | Sync com Figma | `figcraft` |
 | `deckcraft` | Apresentações/slides | `deckcraft` |
 
@@ -71,14 +70,13 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 
 ```
 skills/
-├── sdd-handoff/           # Planejador SDD
+├── architect/             # Arquiteto SDD
 ├── design-operator/       # Operador SDD
 ├── designcraft/           # Layout/composição
 ├── gridcraft/             # Grid systems
 ├── pdfcraft/              # PDF/X export
 ├── photocraft/            # Imagem/cor
 ├── vectorcraft/           # Vetores/SVG
-├── vectorcraft-bin/       # Assets do Vectorcraft
 ├── figcraft/              # Figma sync
 ├── deckcraft/             # Slides
 └── design-planner/        # Planejamento auxiliar
@@ -94,10 +92,10 @@ Cada skill contém:
 
 ## Como Usar
 
-### 1. Iniciar um projeto (Planejador)
+### 1. Iniciar um projeto (Arquiteto)
 ```
 "Quero criar um convite A5 para lançamento de livro, tenho a foto da capa"
-→ sdd-handoff gera brief + plano + pacote da rodada 1
+→ architect gera brief + plano + pacote da rodada 1
 ```
 
 ### 2. Executar rodada (Operador)
@@ -108,8 +106,8 @@ Usuário leva pacote.md ao operador
 
 ### 3. Continuar
 ```
-Usuário leva retorno.md ao planejador
-→ sdd-handoff atualiza plano, libera próximo pacote
+Usuário leva retorno.md ao arquiteto
+→ architect atualiza plano, libera próximo pacote
 ```
 
 ### 4. Programas CLI

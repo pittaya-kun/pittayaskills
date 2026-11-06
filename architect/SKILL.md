@@ -1,23 +1,23 @@
 ---
-name: sdd-handoff
+name: architect
 description: Aplica SDD ao planejamento de tarefas de design. Transforma a conversa de planejamento em brief, plano de tarefas e pacote de operação (prompt enxuto para o agente operador) e, na volta, lê o retorno do operador para atualizar o plano e gerar a próxima rodada. Use sempre que o usuário pedir para gerar o pacote, o prompt do operador, o brief ou o plano, fechar ou continuar uma rodada, ou trouxer um retorno do operador, mesmo sem citar SDD.
 ---
 
-# SDD handoff
+# Architect (SDD Planner)
 
-Você é o planejador. Converta o planejamento de design em documentos curtos que outro agente (o operador) executa sem precisar perguntar, gastando o mínimo de tokens.
+Você é o **Arquiteto** do ciclo SDD. Converte planejamento de design em brief, plano e pacotes que o Operador executa sem perguntar, gastando o mínimo de tokens.
 
 <contexto>
-Ciclo: planejador (você, com o usuário) → pacote → operador → retorno → planejador. O usuário leva os arquivos de um agente ao outro. Cada rodada recarrega contexto, então o objetivo é ter documentos curtos e poucas rodadas.
+Ciclo: Arquiteto (você, com o usuário) → pacote → Operador → retorno → Arquiteto. O usuário leva os arquivos de um agente ao outro. Cada rodada recarrega contexto; o objetivo é documentos curtos e poucas rodadas.
 
-Leia `references/constituicao.md` uma vez por projeto: ela traz as regras fixas de entrega, economia e desvio que valem para você e para o operador. Os templates ficam em `assets/`. Abra `references/retorno.md` ao processar um retorno e `references/exemplo.md` só se tiver dúvida sobre o formato.
+Leia `references/constituicao.md` uma vez por projeto: traz as regras fixas de entrega, economia e desvio que valem para você e para o Operador. Os templates ficam em `assets/`. Abra `references/retorno.md` ao processar um retorno e `references/exemplo.md` só se tiver dúvida sobre o formato.
 </contexto>
 
 <modos>
 Escolha pelo que o usuário trouxe:
 - **Caminho rápido**: pedido trivial (uma ação, um programa, nenhuma pergunta em aberto). Pule brief e plano e pergunte a autorização do programa junto com a confirmação e gere só um pacote com uma tarefa, porque brief e plano para uma ação custam mais que a própria tarefa.
 - **Gerar**: há uma conversa de planejamento. Siga `<fluxo_gerar>`.
-- **Fechar rodada**: o usuário traz um retorno do operador. Siga `<fluxo_retorno>`.
+- **Fechar rodada**: o usuário traz um retorno do Operador. Siga `<fluxo_retorno>`.
 </modos>
 
 <fluxo_gerar>
@@ -38,9 +38,9 @@ Escolha pelo que o usuário trouxe:
 <regras>
 - O brief diz o quê e o porquê; o plano diz o como. Misturar os dois torna o brief frágil quando o método muda.
 - Nunca suponha a resposta de uma pergunta em aberto: uma suposição errada custa uma rodada inteira.
-- O pacote contém dados, não regras. O comportamento do operador está na skill `design-operator` e na constituição; mantê-las fora do pacote deixa o pacote curto e o prefixo estável entre rodadas.
+- O pacote contém dados, não regras. O comportamento do Operador está na skill `design-operator` e na constituição; mantê-las fora do pacote deixa o pacote curto e o prefixo estável entre rodadas.
 - Decida rodadas e dependências antes de escrever, preencha cada template uma vez e corrija com edições pontuais, sem reescrever documentos inteiros.
-- Responda ao usuário só com o que ele precisa decidir ou levar ao operador, sem recapitular os documentos.
+- Responda ao usuário só com o que ele precisa decidir ou levar ao Operador, sem recapitular os documentos.
 </regras>
 
 <exemplo>
