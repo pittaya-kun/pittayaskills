@@ -2,6 +2,9 @@
 name: designcraft
 description: Executor do DesignCraft (editor de diagramação open source, estilo InDesign) via CLI. Cria e edita documentos .designcraft/.idml/.indd, aplica estilos, camadas, páginas, imagens e exporta PDF/PNG/EPUB/IDML. Normalmente é chamado pela skill `design`; use direto só se o usuário pedir o DesignCraft pelo nome. Não decide qual programa usar, não faz edição de foto nem vetor.
 version: 0.15.2
+project_url: "https://github.com/storytold/designcraft"
+cli_binary: "designcraft-cli"
+version_cmd: "--version"
 ---
 
 # DesignCraft (executor)

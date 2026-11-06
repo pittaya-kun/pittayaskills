@@ -2,6 +2,9 @@
 name: photocraft
 description: Executor do PhotoCraft (editor de imagem open source, estilo Photoshop) via CLI. Camadas, máscaras, ajustes de cor, filtros, texto sobre imagem, PSD, e processamento em lote (redimensionar, converter, ajustar). Normalmente é chamado pela skill `design`; use direto só se o usuário pedir o PhotoCraft pelo nome. Não decide qual programa usar, não faz diagramação (DesignCraft), vetor (VectorCraft) nem imagem por IA.
 version: 0.18.0
+project_url: "https://github.com/storytold/photocraft"
+cli_binary: "photocraft-cli"
+version_cmd: "--version"
 ---
 
 # PhotoCraft (executor)

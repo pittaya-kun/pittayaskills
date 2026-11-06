@@ -2,6 +2,9 @@
 name: "vectorcraft"
 description: Ilustração vetorial estilo Illustrator com o VectorCraft (open source) via CLI. Use para criar ou editar logos, ícones, ilustrações, formas, texto e pranchetas, converter entre SVG, PDF, AI, EPS, PNG e outros formatos, exportar arte vetorial e inspecionar arquivos vetoriais. Antes de usar, pergunte ao usuário em uma linha se quer o VectorCraft; só execute se autorizar. Não use para edição de foto (PhotoCraft), diagramação de página (DesignCraft) nem edição de PDF (PdfCraft).
 version: 0.19.0
+project_url: "https://github.com/storytold/vectorcraft"
+cli_binary: "vectorcraft-cli"
+version_cmd: "--version"
 ---
 
 # VectorCraft (CLI)

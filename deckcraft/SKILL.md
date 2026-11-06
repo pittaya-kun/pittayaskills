@@ -2,6 +2,9 @@
 name: deckcraft
 description: Executor do DeckCraft (apresentação open source, estilo PowerPoint) via CLI. Cria e edita apresentações .pptx com slides, layouts, mestres, animações, transições, notas do apresentador e exporta PDF/imagens. Normalmente é chamado pela skill `design`; use direto só se o usuário pedir o DeckCraft pelo nome. Não faz diagramação de documento (DesignCraft), planilhas (GridCraft) nem texto corrido (WordCraft).
 version: 0.13.1
+project_url: "https://github.com/storytold/deckcraft"
+cli_binary: "deckcraft-cli"
+version_cmd: "--version"
 ---
 
 # DeckCraft (executor)

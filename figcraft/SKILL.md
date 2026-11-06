@@ -2,6 +2,9 @@
 name: figcraft
 description: Executor do FigCraft (ferramenta de design colaborativo estilo Figma) via CLI. Cria e edita arquivos de design, componentes, protótipos, e exporta assets. Normalmente é chamado pela skill `design`; use direto só se o usuário pedir o FigCraft pelo nome. Não faz diagramação de página (DesignCraft), edição de foto (PhotoCraft) nem vetor (VectorCraft).
 version: 0.13.1
+project_url: "https://github.com/storytold/figcraft"
+cli_binary: "figcraft-cli"
+version_cmd: "--version"
 ---
 
 # FigCraft (executor)

@@ -2,6 +2,9 @@
 name: pdfcraft
 description: Executor do PdfCraft (leitor/editor de PDF open source) via CLI. Inspeciona PDF (info JSON, fontes, camadas, tags, produtor), extrai texto em ordem de leitura, renderiza páginas em PNG, exporta imagens, faz OCR, divide, extrai, combina, gira e apaga páginas, edita metadados, protege e redige. Normalmente é chamado pela skill `design`; use direto só se o usuário pedir o PdfCraft pelo nome. Não converte PDF em layout editável (DesignCraft), não edita foto (PhotoCraft) nem vetoriza (VectorCraft).
 version: 0.16.1
+project_url: "https://github.com/storytold/pdfcraft"
+cli_binary: "pdfcraft-cli"
+version_cmd: "--version"
 ---
 
 # PdfCraft (executor)

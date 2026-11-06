@@ -2,6 +2,9 @@
 name: wordcraft
 description: Executor do WordCraft (processador de texto open source, estilo Word) via CLI. Cria e edita documentos .docx com formatação, estilos, tabelas, imagens, cabeçalhos/rodapés, numeração, referências e mail merge. Normalmente é chamado pela skill `design`; use direto só se o usuário pedir o WordCraft pelo nome. Não faz diagramação avançada (DesignCraft), planilhas (GridCraft) nem PDF (PdfCraft).
 version: 0.13.2
+project_url: "https://github.com/storytold/wordcraft"
+cli_binary: "wordcraft-cli"
+version_cmd: "--version"
 ---
 
 # WordCraft (executor)

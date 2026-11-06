@@ -2,6 +2,9 @@
 name: gridcraft
 description: Executor do GridCraft (planilha open source, estilo Excel) via CLI. Cria e edita planilhas .xlsx com fórmulas, formatação, tabelas, gráficos e tabelas dinâmicas; lê .xlsx/.csv/.tsv/.json/.html e converte entre eles e PDF. Normalmente é chamado pela skill `design`; use direto só se o usuário pedir o GridCraft pelo nome. Não faz diagramação (DesignCraft), foto, vetor nem leitura de PDF.
 version: 0.14.2
+project_url: "https://github.com/storytold/gridcraft"
+cli_binary: "gridcraft-cli"
+version_cmd: "--version"
 ---
 
 # GridCraft (executor)
