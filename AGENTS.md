@@ -1,167 +1,196 @@
-# AGENTS.md — Guia para LLMs/Agentes: Ecossistema Pittaya Skills
+# AGENTS.md — Pittaya Skills Ecosystem (LLM-Optimized)
 
-> **Para LLMs lendo este repo:** este documento explica como instalar, configurar e usar o ecossistema SDD de design. Leia completo antes de sugerir instalação ao usuário.
-
----
-
-## Visão Rápida (TL;DR)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  ECOSSESTEMA SDD (Spec-Driven Development)                   │
-├─────────────────────────────────────────────────────────────┤
-│  CORE (opcional, gestão)          │  PROGRAMAS (ferramentas) │
-│  ├── architect                    │  ├── designcraft         │
-│  └── design-operator              │  ├── gridcraft           │
-│                                   │  ├── pdfcraft            │
-│  INFRA                            │  ├── photocraft          │
-│  └── zelador                      │  ├── vectorcraft         │
-│                                   │  ├── figcraft            │
-│                                   │  ├── deckcraft           │
-│                                   │  ├── wordcraft           │
-│                                   │  └── craftanything       │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Ponto chave:** As **Program Skills + Zelador funcionam 100% independentes** do Core (architect/design-operator). Um usuário pode instalar só os programas + zelador e usar cada CLI direto.
-
----
-
-## O que cada camada faz
-
-| Camada | Skills | Função | Dependências |
-|--------|--------|--------|--------------|
-| **Core (SDD)** | `architect`, `design-operator` | Planejamento → execução → retorno → próxima rodada | Requer Program Skills |
-| **Programas** | 9 skills (ver tabela) | CLIs de design: layout, imagem, vetor, PDF, slides, texto, planilha, Figma, engenharia reversa | **Zero** — cada uma é autônoma |
-| **Infra** | `zelador` | Baixa/atualiza binários cross-platform (macOS/Linux/Windows) | **Zero** — roda sozinho |
-
----
-
-## Instalação Modular (pergunte ao usuário)
-
-### Opção A — Completa (Core + Programas + Zelador)
-```bash
-# Para quem quer o fluxo SDD completo: planeja → executa → itera
-git clone https://github.com/pittaya-kun/pittayaskills.git
-cp -r pittayaskills/skills/* ~/.claude/skills/
-python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --json
-```
-**Use quando:** usuário quer automação de design com planejamento estruturado, brief/plano/pacote, checks automatizados.
-
-### Opção B — Só Programas + Zelador (recomendado p/ maioria)
-```bash
-# Para quem quer só as ferramentas CLI, sem gestão SDD
-git clone https://github.com/pittaya-kun/pittayaskills.git
-cp -r pittayaskills/skills/designcraft ~/.claude/skills/
-cp -r pittayaskills/skills/gridcraft ~/.claude/skills/
-cp -r pittayaskills/skills/pdfcraft ~/.claude/skills/
-cp -r pittayaskills/skills/photocraft ~/.claude/skills/
-cp -r pittayaskills/skills/vectorcraft ~/.claude/skills/
-cp -r pittayaskills/skills/figcraft ~/.claude/skills/
-cp -r pittayaskills/skills/deckcraft ~/.claude/skills/
-cp -r pittayaskills/skills/wordcraft ~/.claude/skills/
-cp -r pittayaskills/skills/craftanything ~/.claude/skills/
-cp -r pittayaskills/skills/zelador ~/.claude/skills/
-python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --json
-```
-**Use quando:** usuário quer CLIs de design diretas, sem arquiteto/operador. Cada skill tem `setup.sh` que copia o binário pra `/tmp/<sigla>/`.
-
-### Opção C — Programa único + Zelador
-```bash
-# Ex: só vectorcraft
-cp -r pittayaskills/skills/vectorcraft ~/.claude/skills/
-cp -r pittayaskills/skills/zelador ~/.claude/skills/
-python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --program vectorcraft --json
-```
-
----
-
-## Como o Zelador funciona (auto-explicativo)
-
-```bash
-# Checa updates disponíveis (não baixa)
-python3 ~/.claude/skills/zelador/scripts/update-programs.py --check-only --json
-
-# Atualiza tudo
-python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --json
-
-# Atualiza só um
-python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --program designcraft --json
-
-# Dry-run (simula)
-python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --dry-run --json
-```
-
-- Detecta `sys.platform` (darwin/linux/win32) → baixa asset correto
-- Usa `gh` CLI autenticado (precisa `gh auth login`)
-- Extrai binário pra `~/.claude/skills/<skill>/bin/<skill>-cli`
-- Grava `version.txt` na skill
-- Guarda zip em `~/programas/<skill>/` p/ redistribuição
-- **Atômico:** só remove asset antigo após novo baixado + testado
-
----
-
-## Como usar uma Program Skill (standalone)
-
-Toda program skill segue o mesmo padrão:
-
-```
-~/.claude/skills/<skill>/
-├── SKILL.md          # Definição (prompt p/ agente)
-├── scripts/setup.sh  # Copia bin/ → /tmp/<sigla>/ e roda --version
-├── bin/<skill>-cli   # Binário (criado pelo zelador)
-└── version.txt       # Versão atual (criado pelo zelador)
-```
-
-**Uso direto (sem Core):**
-```bash
-# 1. Setup (faz uma vez por sessão)
-sh ~/.claude/skills/designcraft/scripts/setup.sh
-# Cria /tmp/dc/designcraft-cli
-
-# 2. Usa o CLI
-/tmp/dc/designcraft-cli --help
-/tmp/dc/designcraft-cli new --out doc.designcraft
-/tmp/dc/designcraft-cli export doc.designcraft --format pdf --out out.pdf
-```
-
-**Via skill (quando agente carrega a skill):**
-- A skill `designcraft` já sabe chamar o CLI via `setup.sh`
-- Não precisa saber caminho — a skill encapsula
-
----
-
-## Convenções de Frontmatter (p/ Zelador detectar)
-
-Toda Program Skill **DEVE** ter no `SKILL.md`:
-
+## ECOSYSTEM_META
 ```yaml
----
-name: designcraft           # nome da pasta = nome da skill
-description: ...
-version: 0.17.2
-project_url: "https://github.com/storytold/designcraft"  # OBRIGATÓRIO
-cli_binary: "designcraft-cli"  # nome do binário dentro do zip
-version_cmd: "--version"       # comando p/ extrair versão
----
+name: "pittaya-skills"
+type: "sdd-design-automation"
+version: "2026-11"
+repo: "https://github.com/pittaya-kun/pittayaskills.git"
+license: "MIT"
 ```
 
-O zelador lê `project_url` → extrai `owner/repo` → busca release latest no GitHub → matcha asset por platform.
+## LAYER_DEFINITIONS
+```yaml
+layers:
+  - id: core
+    skills: [architect, design-operator]
+    role: "sdd-orchestration"
+    depends_on: [programs]
+    optional: true
+    description: "Brief→Plano→Pacote→Operador→Retorno loop"
 
----
+  - id: programs
+    skills:
+      - designcraft   # layout/composition/typography
+      - gridcraft     # grid systems/alignment
+      - pdfcraft      # PDF/X export/manipulation
+      - photocraft    # image processing/color
+      - vectorcraft   # vectors/SVG/illustration
+      - figcraft      # Figma-style design collab
+      - deckcraft     # presentations/slides
+      - wordcraft     # .docx text processing
+      - craftanything # reverse-engineering + AI recreation
+    role: "cli-tools"
+    depends_on: []
+    optional: false
+    standalone: true
+    each:
+      provides: "CLI binary via zelador"
+      pattern: "setup.sh → /tmp/<sigla>/<cli>"
 
-## Estrutura do Repo (source)
+  - id: infra
+    skills: [zelador]
+    role: "binary-management"
+    depends_on: []
+    optional: false
+    standalone: true
+    provides: "cross-platform binary downloader/updater"
+```
 
+## INSTALLATION_MATRIX
+```yaml
+options:
+  A_full:
+    label: "Core + Programs + Zelador"
+    use_when: "user wants SDD workflow (brief→plan→execute→iterate)"
+    commands:
+      - "git clone https://github.com/pittaya-kun/pittayaskills.git"
+      - "cp -r pittayaskills/skills/* ~/.claude/skills/"
+      - "python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --json"
+
+  B_programs_only:
+    label: "Programs + Zelador (recommended default)"
+    use_when: "user wants CLI design tools without SDD orchestration"
+    commands:
+      - "git clone https://github.com/pittaya-kun/pittayaskills.git"
+      - "for s in designcraft gridcraft pdfcraft photocraft vectorcraft figcraft deckcraft wordcraft craftanything zelador; do cp -r pittayaskills/skills/$s ~/.claude/skills/; done"
+      - "python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --json"
+
+  C_single:
+    label: "Single Program + Zelador"
+    use_when: "user needs only one specific tool"
+    template:
+      - "git clone https://github.com/pittaya-kun/pittayaskills.git"
+      - "cp -r pittayaskills/skills/<SKILL_NAME> ~/.claude/skills/"
+      - "cp -r pittayaskills/skills/zelador ~/.claude/skills/"
+      - "python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --program <SKILL_NAME> --json"
+
+decision_required: true
+prompt_user: "Choose installation: A (full SDD), B (tools only), or C (single tool)?"
+```
+
+## ZELADOR_API
+```yaml
+script: "~/.claude/skills/zelador/scripts/update-programs.py"
+requires: ["gh auth login", "python3", "curl"]
+platform_detection: "sys.platform (darwin|linux|win32|cygwin)"
+asset_matching:
+  darwin: ["macos-universal.zip", "-macos.zip", "-darwin.zip"]
+  linux:  ["linux-x86_64.tar.gz", "-linux.tar.gz", "-linux.tgz"]
+  win32:  ["windows-x86_64.zip", "-windows.zip", ".exe"]
+commands:
+  check:    "--check-only --json"
+  update:   "--update --json"
+  single:   "--update --program <NAME> --json"
+  dry_run:  "--update --dry-run --json"
+output_schema:
+  status: "success|partial|error"
+  platform: "string"
+  updated:  "[{skill, old_version, new_version, asset_downloaded, binary_path, dist_path}]"
+  skipped:  "[{skill, version, reason}]"
+  errors:   "[{skill, error, details}]"
+  warnings: "[{skill, reason}]"
+behavior:
+  atomic: true
+  cleanup_old_after_verify: true
+  verify_checksum: true
+  parallel_downloads: 4
+```
+
+## PROGRAM_SKILL_CONTRACT
+```yaml
+required_frontmatter:
+  name: "folder_name"
+  project_url: "https://github.com/owner/repo"
+  cli_binary: "binary-name"
+  version_cmd: "--version"
+directory_structure:
+  ~/.claude/skills/<skill>/
+    SKILL.md          # agent prompt definition
+    scripts/setup.sh  # copies bin/ → /tmp/<sigla>/ ; runs --version
+    bin/<cli>         # created by zelador
+    version.txt       # created by zelador
+setup_sh_pattern:
+  - "DIR=$(cd $(dirname $0)/.. && pwd)"
+  - "OUT=/tmp/<sigla>"
+  - "mkdir -p $OUT"
+  - "cp -f $DIR/bin/<cli> $OUT/<cli>"
+  - "chmod +x $OUT/<cli>"
+  - "$OUT/<cli> --version | head -1"
+usage_standalone:
+  - "sh ~/.claude/skills/<skill>/scripts/setup.sh"
+  - "/tmp/<sigla>/<cli> <command>"
+usage_via_agent: "agent loads skill → skill invokes setup.sh internally"
+```
+
+## FRONTMATTER_REGISTRY
+```yaml
+skills:
+  designcraft:   {project_url: "https://github.com/storytold/designcraft",   cli_binary: "designcraft-cli",   version_cmd: "--version"}
+  gridcraft:     {project_url: "https://github.com/storytold/gridcraft",     cli_binary: "gridcraft-cli",     version_cmd: "--version"}
+  pdfcraft:      {project_url: "https://github.com/storytold/pdfcraft",      cli_binary: "pdfcraft-cli",      version_cmd: "--version"}
+  photocraft:    {project_url: "https://github.com/storytold/photocraft",    cli_binary: "photocraft-cli",    version_cmd: "--version"}
+  vectorcraft:   {project_url: "https://github.com/storytold/vectorcraft",   cli_binary: "vectorcraft-cli",   version_cmd: "--version"}
+  figcraft:      {project_url: "https://github.com/storytold/figcraft",      cli_binary: "figcraft-cli",      version_cmd: "--version"}
+  deckcraft:     {project_url: "https://github.com/storytold/deckcraft",     cli_binary: "deckcraft-cli",     version_cmd: "--version"}
+  wordcraft:     {project_url: "https://github.com/storytold/wordcraft",     cli_binary: "wordcraft-cli",     version_cmd: "--version"}
+  craftanything: {project_url: "https://github.com/storytold/craft-anything", cli_binary: "craft-anything-cli", version_cmd: "--version"}
+  architect:     {project_url: null, cli_binary: null, version_cmd: null}  # core, no binary
+  design-operator: {project_url: null, cli_binary: null, version_cmd: null} # core, no binary
+  design-planner:  {project_url: null, cli_binary: null, version_cmd: null} # support, no binary
+  zelador:       {project_url: null, cli_binary: null, version_cmd: null}  # infra, no binary
+  pittaya-indesign-scripts: {project_url: null, cli_binary: null, version_cmd: null} # external
+```
+
+## AGENT_DECISION_TREE
+```
+ON_REPO_DISCOVERY:
+  1. READ this AGENTS.md
+  2. PARSE LAYER_DEFINITIONS, INSTALLATION_MATRIX
+  3. ASK_USER: installation_option (A|B|C) + target_skills[]
+  4. EXECUTE commands from INSTALLATION_MATRIX[option]
+  5. RUN zelador check → confirm all latest
+  6. CONFIRM ready
+
+ON_USER_REQUEST:
+  IF request ∈ [design, layout, image, vector, pdf, slides, doc, spreadsheet, figma, reverse-engineer]:
+    IF skill_installed(request):
+      USE skill directly (standalone or via core)
+    ELSE:
+      SUGGEST install option B or C for that skill
+  IF request ∈ [plan, architect, brief, orchestrate]:
+    REQUIRE core (architect + design-operator) + programs
+    SUGGEST option A
+  IF request == "update" OR "check versions":
+    RUN zelador API
+
+ON_ERROR:
+  zelador errors → present to user with fallback options (per ZELADOR_API.output_schema.errors)
+  missing binary → run zelador update for that skill
+  gh auth missing → instruct "gh auth login"
+```
+
+## REPO_STRUCTURE
 ```
 skills/
-├── AGENTS.md              # ← ESTE ARQUIVO
-├── README.md              # Documentação humana
-├── architect/             # Core SDD
-├── design-operator/       # Core SDD
-├── zelador/               # Infra
+├── AGENTS.md           # THIS FILE
+├── README.md           # human docs
+├── architect/          # core
+├── design-operator/    # core
+├── zelador/            # infra
 │   ├── SKILL.md
 │   └── scripts/update-programs.py
-├── designcraft/           # Programa
+├── designcraft/        # program
 ├── gridcraft/
 ├── pdfcraft/
 ├── photocraft/
@@ -170,57 +199,22 @@ skills/
 ├── deckcraft/
 ├── wordcraft/
 ├── craftanything/
-└── design-planner/        # Suporte (auxiliar)
+└── design-planner/     # support
+NOT_IN_REPO: bin/, version.txt, *.zip (generated by zelador)
 ```
 
-**NÃO estão no repo:** `bin/`, `version.txt`, zips — gerados pelo zelador.
+## KEY_INVARIANTS
+- Programs + Zelador = fully functional WITHOUT Core
+- Each Program Skill = autonomous, zero dependencies
+- Zelador = single source of truth for binaries
+- Binaries never in repo (too large, platform-specific)
+- Frontmatter `project_url` = required for zelador auto-detection
+- `gh` CLI = required for zelador (GitHub API auth)
+- Setup.sh = idempotent, safe to re-run
+
+## CHANGELOG
+- 2026-11: Added craftanything, renamed updater→zelador, removed binaries from repo, added AGENTS.md
 
 ---
 
-## Checklist para LLM sugerir instalação
-
-- [ ] Perguntou: "Quer o fluxo SDD completo (architect + operator) ou só as ferramentas CLI?"
-- [ ] Explicou que programas + zelador funcionam **sem** architect/operator
-- [ ] Mostrou comando de instalação modular (Opção A, B ou C)
-- [ ] Avisou que precisa `gh auth login` pro zelador baixar releases
-- [ ] Confirmou que binários ficam em `~/.claude/skills/<skill>/bin/` (não no repo)
-- [ ] Deixou claro: cada skill é autônoma, pode instalar só a que precisa
-
----
-
-## Exemplos de uso por camada
-
-### Só Programas (sem Core)
-> Usuário: "Converte esta imagem pra CMYK"
-> → LLM carrega skill `photocraft` → roda `photocraft-cli convert --cmyk in.jpg out.tif`
-
-### Com Core (SDD completo)
-> Usuário: "Quero criar um convite A5, tenho a foto da capa"
-> → `architect` gera brief + plano + pacote
-> → `design-operator` executa: `photocraft` pra tratar foto, `designcraft` pra layout, `pdfcraft` pra export
-> → Retorna `retorno.md` → próxima rodada
-
-### Engenharia reversa (craftanything)
-> Usuário: "Recria este site em React + Tailwind"
-> → `craftanything` → `craft-anything-cli rebuild https://site.com "Recria em React + Tailwind"`
-
----
-
-## Notas para LLM
-
-- **Não assuma** que o usuário quer o Core. A maioria quer só ferramentas.
-- **Sempre pergunte** qual nível de instalação (A/B/C acima).
-- **O zelador é opcional mas recomendado** — sem ele, binários não existem.
-- **Skills não se comunicam** entre si — o Core (architect/operator) orquestra; standalone, cada uma é isolada.
-- **Setup.sh** é idempotente — pode rodar múltiplas vezes.
-- **Binários são grandes** (50-100MB cada) — por isso não estão no repo.
-
----
-
-## Atualizando este guia
-
-Se o ecossistema mudar (novas skills, mudança no zelador, etc.), atualize este `AGENTS.md` junto. Ele é a "interface" pros agentes futuros.
-
----
-
-*Este arquivo segue a convenção `AGENTS.md` para documentação consumível por agentes de código/LLMs. Veja também `README.md` para documentação humana.*
+#PARSE_HINT: This file uses YAML code blocks for structured data. Extract LAYER_DEFINITIONS, INSTALLATION_MATRIX, ZELADOR_API, PROGRAM_SKILL_CONTRACT, FRONTMATTER_REGISTRY, AGENT_DECISION_TREE for programmatic use.
