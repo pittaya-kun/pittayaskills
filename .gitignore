@@ -1,0 +1,14 @@
+# Ignore everything except skills/
+*
+!skills/
+!skills/**
+!.gitignore
+!README.md
+!LICENSE
+
+# Explicitly ignore pittaya-indesign-scripts (not part of ecosystem)
+skills/pittaya-indesign-scripts/
+
+# Ignore large binaries (distributed via programas/)
+**/bin/
+skills/vectorcraft-bin/bin/
