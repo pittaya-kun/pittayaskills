@@ -19,6 +19,11 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 │  PROGRAM SKILLS     │                    │  CONSTITUIÇÃO        │
 │  (ferramentas)      │                    │  (regras fixas)      │
 └─────────────────────┘                    └──────────────────────┘
+         │
+         ▼
+┌────────────────────────────────────────────────────────────────┐
+│  ZELADOR — mantém binários atualizados cross-platform           │
+└────────────────────────────────────────────────────────────────┘
 ```
 
 ### Fluxo Principal
@@ -36,6 +41,11 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 
 3. **Próxima rodada** — Arquiteto lê retorno, atualiza plano, libera próximo pacote
 
+4. **Zelador** (`zelador`) — Mantém binários CLI sempre na última versão:
+   - `check-only` — lista updates disponíveis sem baixar
+   - `update` — baixa, extrai, testa, limpa assets antigos
+   - Detecta OS (macOS/Linux/Windows) e baixa só o asset correto
+
 ---
 
 ## Skills do Ecossistema
@@ -49,13 +59,20 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 ### Program Skills (ferramentas que o operador chama)
 | Skill | Função | Programa CLI |
 |-------|--------|--------------|
-| `designcraft` | Layout, composição, tipografia | `designcraft` |
-| `gridcraft` | Sistemas de grid, alinhamento | `gridcraft` |
-| `pdfcraft` | Manipulação/export PDF/X | `pdfcraft` |
-| `photocraft` | Tratamento de imagem, cor | `photocraft` |
-| `vectorcraft` | Vetores, SVG, ilustração | `vectorcraft` |
-| `figcraft` | Sync com Figma | `figcraft` |
-| `deckcraft` | Apresentações/slides | `deckcraft` |
+| `designcraft` | Layout, composição, tipografia | `designcraft-cli` |
+| `gridcraft` | Sistemas de grid, alinhamento | `gridcraft-cli` |
+| `pdfcraft` | Manipulação/export PDF/X | `pdfcraft-cli` |
+| `photocraft` | Tratamento de imagem, cor | `photocraft-cli` |
+| `vectorcraft` | Vetores, SVG, ilustração | `vectorcraft-cli` |
+| `figcraft` | Design colaborativo estilo Figma | `figcraft-cli` |
+| `deckcraft` | Apresentações/slides | `deckcraft-cli` |
+| `wordcraft` | Processamento de texto .docx | `wordcraft-cli` |
+| `craftanything` | Engenharia reversa + recriação via AI | `craft-anything-cli` |
+
+### Infraestrutura
+| Skill | Função |
+|-------|--------|
+| `zelador` | Atualiza binários dos programas (cross-platform) |
 
 ### Suporte
 | Skill | Função |
@@ -72,6 +89,9 @@ Coleção de skills para automação de design baseada em **SDD (Spec-Driven Dev
 skills/
 ├── architect/             # Arquiteto SDD
 ├── design-operator/       # Operador SDD
+├── zelador/               # Zelador de binários
+│   ├── SKILL.md
+│   └── scripts/update-programs.py
 ├── designcraft/           # Layout/composição
 ├── gridcraft/             # Grid systems
 ├── pdfcraft/              # PDF/X export
@@ -79,6 +99,8 @@ skills/
 ├── vectorcraft/           # Vetores/SVG
 ├── figcraft/              # Figma sync
 ├── deckcraft/             # Slides
+├── wordcraft/             # Texto .docx
+├── craftanything/         # Engenharia reversa + AI
 └── design-planner/        # Planejamento auxiliar
 ```
 
@@ -87,6 +109,41 @@ Cada skill contém:
 - `assets/` — templates (brief.md, plano.md, pacote.md, etc.)
 - `references/` — constituição, formato de retorno, exemplos
 - `scripts/` — automações CLI (quando aplicável)
+
+> **Binários NÃO estão no repo** — são baixados sob demanda pelo **zelador** para `bin/` e versão salva em `version.txt`.
+
+---
+
+## Primeira Vez / Instalação
+
+### 1. Clone e instale as skills
+```bash
+git clone https://github.com/pittaya-kun/pittayaskills.git
+# Copie as pastas das skills para ~/.claude/skills/
+cp -r pittayaskills/skills/* ~/.claude/skills/
+```
+
+### 2. Baixe os binários (Zelador)
+```bash
+# Opção A: Via skill zelador (no chat)
+"atualiza os programas"
+
+# Opção B: Direto via script
+python3 ~/.claude/skills/zelador/scripts/update-programs.py --update --json
+```
+
+O zelador vai:
+- Detectar seu OS (macOS/Linux/Windows)
+- Baixar o asset correto de cada release no GitHub
+- Extrair o binário para `~/.claude/skills/<skill>/bin/`
+- Gravar `version.txt` com a versão instalada
+- Deixar o zip em `~/programas/<skill>/` para redistribuição
+
+### 3. Verifique
+```bash
+python3 ~/.claude/skills/zelador/scripts/update-programs.py --check-only --json
+```
+Todas devem aparecer como `"status": "skipped", "reason": "already_latest"`.
 
 ---
 
@@ -110,12 +167,33 @@ Usuário leva retorno.md ao arquiteto
 → architect atualiza plano, libera próximo pacote
 ```
 
-### 4. Programas CLI
-Cada program skill expõe um CLI instalável via `programas/` (versões Mac + Linux):
+### 4. Atualizar programas (Zelador)
+```
+"atualiza os programas"
+→ zelador roda script, baixa updates, resume o que mudou
+
+"checa updates"
+→ só lista o que tem disponível, não baixa
+
+"atualiza craftanything"
+→ atualiza só uma skill específica
+```
+
+### 5. Programas CLI
+Após instalar via zelador, cada CLI fica em `~/.claude/skills/<skill>/bin/`:
 ```bash
-designcraft --help
-photocraft convert --cmyk input.jpg output.tif
-pdfcraft export --pdfx4 layout.indd output.pdf
+# Exemplo via setup.sh de cada skill
+sh ~/.claude/skills/designcraft/scripts/setup.sh
+designcraft-cli --help
+
+sh ~/.claude/skills/photocraft/scripts/setup.sh
+photocraft-cli convert --cmyk input.jpg output.tif
+
+sh ~/.claude/skills/pdfcraft/scripts/setup.sh
+pdfcraft-cli export --pdfx4 layout.indd output.pdf
+
+sh ~/.claude/skills/craftanything/scripts/setup.sh
+craft-anything-cli rebuild https://site.com "Recria em React + Tailwind"
 ```
 
 ---
@@ -131,14 +209,6 @@ pdfcraft export --pdfx4 layout.indd output.pdf
 | **Tokens mínimos** | Carrega skill do programa só na tarefa dela. Pacote curto, prefixo estável. |
 
 ---
-
-## Instalação das Skills
-
-No Claude Code:
-```bash
-# Cada skill é uma pasta em .claude/agents/ ou carregada via skill system
-# Consulte a documentação de cada skill em skills/<nome>/
-```
 
 ## Licença
 

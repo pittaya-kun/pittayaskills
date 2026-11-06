@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Update Programs Worker — Deterministic CLI binary updater for SDD ecosystem.
+Zelador Worker — Deterministic CLI binary updater for SDD ecosystem.
 
 Usage:
     python update-programs.py --check-only [--program NAME] [--json]
@@ -25,7 +25,6 @@ from typing import Optional, List, Dict, Any
 SKILLS_DIR = Path(__file__).parent.parent.parent
 ROOT_DIR = SKILLS_DIR.parent
 PROGRAMAS_DIR = ROOT_DIR / "programas"
-UPDATER_CONFIG = SKILLS_DIR / "updater.json"
 
 # Skills que NÃO são programas CLI (ignoradas)
 SKIP_SKILLS = {
