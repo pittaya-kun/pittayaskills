@@ -10,3 +10,6 @@ skills/vectorcraft-bin/bin/
 
 # Ignore pittaya-indesign-scripts (not part of ecosystem)
 pittaya-indesign-scripts/
+
+# Local bug reports (agent-facing, not for repo)
+.bugs/

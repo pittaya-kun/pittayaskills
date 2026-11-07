@@ -1,0 +1,27 @@
+{
+  "asset_patterns": {
+    "darwin": ["macos-universal.zip", "-macos.zip", "-darwin.zip"],
+    "linux": ["linux-x86_64.tar.gz", "-linux.tar.gz", "-linux.tgz"],
+    "win32": ["windows-x86_64.zip", "-windows.zip", ".exe"],
+    "cygwin": ["windows-x86_64.zip", "-windows.zip", ".exe"]
+  },
+  "timeouts": {
+    "api": 30,
+    "download": 300
+  },
+  "parallel_downloads": 4,
+  "retry": {
+    "max_attempts": 3,
+    "backoff_base": 2,
+    "backoff_max": 60
+  },
+  "checksum": {
+    "enabled": true,
+    "fallback_to_local": true,
+    "checksum_asset_names": ["SHA256SUMS", "SHA256SUMS.txt", "checksums.txt", "checksums.sha256", "sha256sums.txt"]
+  },
+  "cleanup": {
+    "remove_old_assets": true,
+    "remove_failed_downloads": true
+  }
+}
